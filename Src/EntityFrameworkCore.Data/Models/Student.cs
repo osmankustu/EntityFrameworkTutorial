@@ -24,7 +24,7 @@ namespace EntityFrameworkCore.Data.Models
         public virtual StudentAddress Address { get; set; }
 
         //for one to many property configuration
-        public ICollection<Book> Books { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
 
         public virtual ICollection<Course> Courses { get; set; }
     }

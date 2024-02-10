@@ -3,6 +3,7 @@ using EntityFrameworkCore.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace EntityFrameworkCoreTutorial.WebApi.Controllers
 {
@@ -17,13 +18,39 @@ namespace EntityFrameworkCoreTutorial.WebApi.Controllers
             _context = context;
         }
 
+        // Loading Types =>EagerLoading ,LazyLoading
+        private async Task<Student> EagerLoading(int param)
+        {
+            //Eager Loading
+            var students = await _context.Students
+                .Include(i=>i.Books)
+                .FirstOrDefaultAsync(i=>i.Id == param);
+            return students;
+        }
+
+        //Loading Types => LazyLoading
+        // Virtual sign should be used in Entity
+        private async Task<Student> LazyLoading(int param)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(i=>i.Id == param);
+
+            return student;
+        }
+        
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var students = await _context.Students.ToListAsync();
+            //Eager
+            //var data = await EagerLoading(1003);
+            //return Ok(data);
 
-            return Ok(students);
+            //Lazy
+            var data = await LazyLoading(1003);
+            return Ok(data);
         }
+
+      
 
         [HttpPost]
         public async Task<IActionResult> Add()
